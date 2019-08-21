@@ -475,6 +475,15 @@ function config_site () {
 
     echo "#define PJ_CONFIG_IPHONE 1" >> $PJSIP_CONFIG_SITE_H
 
+    echo "#define PJMEDIA_HAS_VIDEO 1" >> $PJSIP_CONFIG_SITE_H
+
+    echo "#define PJMEDIA_RTP_PT_TELEPHONE_EVENTS 101" >> $PJSIP_CONFIG_SITE_H
+    echo "#define PJMEDIA_RTP_PT_TELEPHONE_EVENTS_STR \"101\"" >> $PJSIP_CONFIG_SITE_H
+
+    echo "#define PJMEDIA_HAS_SPEEX_CODEC 0" >> $PJSIP_CONFIG_SITE_H
+    echo "#define PJMEDIA_HAS_GSM_CODEC 0" >> $PJSIP_CONFIG_SITE_H
+    echo "#define PJMEDIA_HAS_OPUS_CODEC 0" >> $PJSIP_CONFIG_SITE_H
+
     if [ $INDEPENDENT_WEBRTC = true ]; then
         echo "#define PJMEDIA_HAS_SRTP 0" >> $PJSIP_CONFIG_SITE_H
     fi
@@ -499,6 +508,7 @@ function config_site () {
     done <<< $CONFIG_SITE_OPTIONS
 
     echo "#include <pj/config_site_sample.h>" >> $PJSIP_CONFIG_SITE_H
+    echo "#define PJMEDIA_HAS_ILBC_CODEC 0" >> $PJSIP_CONFIG_SITE_H
     echo "Done creating new config_site.h"
     echo "============================="
 }
@@ -538,14 +548,14 @@ function configure_i386 () {
     echo "Configure for i386"
     export DEVPATH=$XCODE_SIMULATOR_DEV_PATH
     export CFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION"
-    export LDFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION -Wl,-no_compact_unwind"
+    export LDFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION -Wl"
 }
 
 function configure_x86_64 () {
     echo "Configure for x86_64"
     export DEVPATH=$XCODE_SIMULATOR_DEV_PATH
     export CFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION"
-    export LDFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION -Wl,-no_compact_unwind"
+    export LDFLAGS="-O2 -m32 -mios-simulator-version-min=$MIN_IOS_VERSION -Wl"
 }
 
 function _build () {
@@ -588,7 +598,7 @@ function _build () {
 
     cp $PJSIP_CONFIG_SITE_H "$BASE_DIR/pjsip/src/pjlib/include/pj"
 
-    ARCH="-arch $arch" $configure >> $arch_log 2>&1 || exit
+    ARCH="-arch $arch" $configure || exit
 
     make dep >> $arch_log 2>&1 &
     spinner $!
