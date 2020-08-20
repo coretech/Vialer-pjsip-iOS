@@ -509,6 +509,10 @@ function config_site () {
 
     echo "#include <pj/config_site_sample.h>" >> $PJSIP_CONFIG_SITE_H
     echo "#define PJMEDIA_HAS_ILBC_CODEC 0" >> $PJSIP_CONFIG_SITE_H
+
+    echo "#define PJMEDIA_HAS_RTCP_XR 1" >> $PJSIP_CONFIG_SITE_H
+    echo "#define PJMEDIA_STREAM_ENABLE_XR 1" >> $PJSIP_CONFIG_SITE_H
+    
     echo "Done creating new config_site.h"
     echo "============================="
 }
